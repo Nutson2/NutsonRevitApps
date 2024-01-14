@@ -1,0 +1,115 @@
+﻿<Window Title="Редактор таблиц выбора" x:Class="LookupTableEditor.LookupTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            mc:Ignorable="d" 
+             MinHeight="350" MinWidth="500" WindowStartupLocation="CenterScreen" 
+             MaxWidth="1500" MaxHeight="800" SizeToContent="WidthAndHeight" Topmost="True"
+                PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            
+            <GradientStop Color="#FF6AB4F5" Offset="0"/>
+            <GradientStop Color="#FFB9BBF3" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    
+    
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="RoundButton">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5" />
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+                
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox ItemsSource="{Binding Path=SizeTableNames}" 
+                  SelectedValue="{Binding Path=CurTableName, Mode=TwoWay}" 
+                  VerticalContentAlignment="Center"/>
+
+        <Button Grid.Column="1" Content="Создать" Click="CreateNewTable_Click" Style="{DynamicResource RoundButton}"/>
+        
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid  x:Name="dg_Table" 
+                       Margin="5,1,1,1" 
+                       ClipboardCopyMode="ExcludeHeader" 
+                       HorizontalAlignment="Stretch"
+                       MinColumnWidth="30" 
+                       Width="auto"
+                       ItemsSource="{Binding Path=DataTable, Mode=OneWay}"
+                       CanUserReorderColumns="False"
+                       SelectionUnit="Cell" 
+                       CanUserSortColumns="False" />
+            
+            <StackPanel Orientation="Vertical" Grid.Column="1" Margin="0">
+                <Button x:Name="bt_addRow" Grid.Column="0" Grid.Row="2" Content="➕"
+                        Width="25" Height="25"
+                        ToolTip= "Добавить строку в начало таблицы" Click="AddRow_Click" 
+                        FontSize="14" FontWeight="Bold" Margin="1,1,1,3" />
+                <Button x:Name="bt_ExportTable" Grid.Column="0" Grid.Row="2" Content="📝"
+                        Width="25" Height="25"
+                        ToolTip= "Экспортировать таблицу в CSV" Click="ExportTable_Click" 
+                        FontSize="14" FontWeight="Bold" Margin="1,1,1,3" />
+
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="bt_Accept" Grid.Column="4" Grid.Row="2" 
+                    Content="Применить" 
+                    Click="ChangeTable_Click"
+                    Style="{DynamicResource RoundButton}"/>
+            <Label Content="💬" Grid.Row="2" 
+                   ToolTip="Написать в Telegram"
+                   MouseLeftButtonDown="GotoTelegram_MouseLeftButtonDown" 
+                   Margin="10 0 0 0" 
+                   HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label Content="📺" Grid.Row="2" Grid.Column="1" 
+                   ToolTip="Посмотреть инструкцию на YouTube"
+                   Margin="10 0 0 0" 
+                   HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   MouseLeftButtonDown="GoToYouTube_MouseLeftButtonDown"/>
+            <Label Content=" 👍" Grid.Row="2" Grid.Column="2" 
+                   ToolTip="Отблагодарить :)"
+                   Margin="10 0 0 0" 
+                   HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   MouseLeftButtonDown="GoToQivi_MouseLeftButtonDown" 
+                   />
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,64 @@
+﻿using Autodesk.Revit.DB;
+using NRPUtils.MVVMBase;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FamilyParameterEditor.FM.Model
+{
+    public class FamilyModel : NotifyObject
+    {
+		private string            name;
+		private string            path;
+		private Document          familyDocument;
+
+        public readonly Document          document;
+		public readonly FamilyStorageType storageType;
+
+        public string Name { get { return name; } set { name = value; OnPropertyChanged(); } }
+        public string Path { get { return path; } set { path = value; } }
+        public Family Family { get; set; }
+        public Document FamilyDocument { get => GetFamDocument(); set => familyDocument = value; }
+
+        public FamilyModel(Document document, string path)
+        {
+            Path = path;
+            Family = null;
+            this.document = document;
+            Name = new FileInfo(Path).Name;
+            storageType = FamilyStorageType.InDirectory;
+        }
+        public FamilyModel(Family family)
+        {
+            Family = family;
+            Name = Family.Name;
+            storageType = FamilyStorageType.InDocument;
+            document = family.Document;
+        }
+        public FamilyModel(Document famDocument, Family family)
+        {
+            Family = family;
+            FamilyDocument = famDocument;
+            Name = Family.Name;
+            document = family.Document;
+            storageType = FamilyStorageType.Opened;
+        }
+
+        private Document GetFamDocument() 
+        {
+            if (familyDocument == null)
+            {
+                familyDocument = FamiliesLoader.LoadFamily(this);
+            }
+            return familyDocument;
+        }
+
+    }
+    public enum FamilyStorageType
+    {
+        InDocument,
+        InDirectory,
+        Opened
+    }
+}

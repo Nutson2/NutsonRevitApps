@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopyParametersGadgets", "CopyParametersGadgets\CopyParametersGadgets.csproj", "{E221A459-2D01-428A-AD5A-2AB9F7452ACC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyParameterEditor", "FamilyParameterEditor\FamilyParameterEditor.csproj", "{3327E9D9-F498-4983-AA5D-1DC77617BBFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LookupTableEditor", "LookupTableEditor\LookupTableEditor.csproj", "{1F444D45-3A0C-4DE9-88B3-968B80CAEDCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEPGadgets", "MEPGadgets\MEPGadgets.csproj", "{D930348A-1619-4493-81AC-54A9C9640B6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NRTUtils", "NRTUtils\NRTUtils.csproj", "{5DCF0674-4E97-456A-80B7-204E32BA20A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NutsonApp", "NutsonApp\NutsonApp.csproj", "{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsGadgets", "TagsGadgets\TagsGadgets.csproj", "{8812897E-85B6-46C4-BD35-033A71E9D2C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MainProject", "MainProject", "{698A69AD-5352-4661-A95C-355EBD47DD0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{CBADFA79-36AC-4277-BE27-B145773D6121}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90B8DAFF-ADA5-45F6-84F6-24748CEA763E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E221A459-2D01-428A-AD5A-2AB9F7452ACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E221A459-2D01-428A-AD5A-2AB9F7452ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E221A459-2D01-428A-AD5A-2AB9F7452ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E221A459-2D01-428A-AD5A-2AB9F7452ACC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3327E9D9-F498-4983-AA5D-1DC77617BBFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3327E9D9-F498-4983-AA5D-1DC77617BBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3327E9D9-F498-4983-AA5D-1DC77617BBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3327E9D9-F498-4983-AA5D-1DC77617BBFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F444D45-3A0C-4DE9-88B3-968B80CAEDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F444D45-3A0C-4DE9-88B3-968B80CAEDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F444D45-3A0C-4DE9-88B3-968B80CAEDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F444D45-3A0C-4DE9-88B3-968B80CAEDCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D930348A-1619-4493-81AC-54A9C9640B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D930348A-1619-4493-81AC-54A9C9640B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D930348A-1619-4493-81AC-54A9C9640B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D930348A-1619-4493-81AC-54A9C9640B6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DCF0674-4E97-456A-80B7-204E32BA20A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DCF0674-4E97-456A-80B7-204E32BA20A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DCF0674-4E97-456A-80B7-204E32BA20A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DCF0674-4E97-456A-80B7-204E32BA20A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8812897E-85B6-46C4-BD35-033A71E9D2C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8812897E-85B6-46C4-BD35-033A71E9D2C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8812897E-85B6-46C4-BD35-033A71E9D2C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8812897E-85B6-46C4-BD35-033A71E9D2C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5DCF0674-4E97-456A-80B7-204E32BA20A4} = {CBADFA79-36AC-4277-BE27-B145773D6121}
+		{0EE2EC6A-CE0E-47D5-AA7D-2C1B67A05AFF} = {698A69AD-5352-4661-A95C-355EBD47DD0B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE6B098A-604F-4F7A-8ADF-EEE89972C55D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,73 @@
+﻿<Window x:Class="CopyParametersGadgets.WriteCalculation.View.ViewCalculation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CopyParametersGadgets.WriteCalculation.View"
+             mc:Ignorable="d" 
+             Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{Binding CalculationModels}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="240">
+                        <GridViewColumn.Header >
+                            <TextBlock Text="Категория"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Categories}" 
+                                          SelectedItem="{Binding Category}" Width="200"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="240">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="Параметр для записи"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding AvailableParametersForWrite}" 
+                                          SelectedItem="{Binding ParameterForWrite}" Width="200"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="240">
+                        <GridViewColumn.Header >
+                            <TextBlock Text="Параметр со значениями для суммирования" 
+                                       TextWrapping="Wrap" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding AvailableParametersForSumming}" 
+                                          SelectedItem="{Binding ParameterForSumming}" Width="200"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="Удалить строку" TextWrapping="Wrap"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Click="Button_Click" Width="35" BorderThickness="2"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            
+        <Button x:Name="AddRow" Content="Добавить строку" Margin="5" 
+                Padding="5,0,5,0" Click="AddRow_Click"/>
+        <Button x:Name="Apply" Content="Применить" Margin="5"
+                Padding="5,0,5,0" Click="Apply_Click"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
