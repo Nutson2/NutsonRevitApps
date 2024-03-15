@@ -1,79 +1,25 @@
 ﻿using Autodesk.Revit.DB;
-using NRPUtils.MVVMBase;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using System.Data;
-using System.Linq;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace LookupTableEditor
 {
-    public class SelectParamViewModel : NotifyObject
+    public partial class SelectParamViewModel : ObservableObject
     {
         private readonly Document _doc;
 
+        [ObservableProperty]
         private string _nameTable;
-
-        public string NameTable
-        {
-            get { return _nameTable; }
-            set 
-            { 
-                _nameTable = value;
-                if (_nameTable != string.Empty) { SelectedNameTable = true; }
-                OnPropertyChanged();
-            }
-        }
-
-        private bool selectedNameTable;
-        public bool SelectedNameTable
-        {
-            get { return selectedNameTable; }
-            set
-            {
-                selectedNameTable = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool selectedNameTableParam;
-        public bool SelectedNameTableParam
-        {
-            get { return selectedNameTableParam; }
-            set 
-            { 
-                selectedNameTableParam = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool selectedKeyParam;
-        public bool SelectedKeyParam
-        {
-            get { return selectedKeyParam; }
-            set 
-            {
-                selectedKeyParam = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool selectedDependParam;
-        public bool SelectedDependParam
-        {
-            get { return selectedDependParam; }
-            set 
-            {
-                selectedDependParam = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private bool _selectedNameTable;
+        [ObservableProperty]
+        private bool _selectedNameTableParam;
+        [ObservableProperty]
+        private bool _selectedKeyParam;
+        [ObservableProperty]
+        private bool _selectedDependParam;
 
         public ObservableCollection<SelectParamModel> ListParam;
 
@@ -90,12 +36,9 @@ namespace LookupTableEditor
                 ListParam.Add(paramModel);
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        partial void OnNameTableChanged(string value)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            if (value != string.Empty) { SelectedNameTable = true; }
         }
 
         public void CheckCheckBox()
@@ -103,10 +46,9 @@ namespace LookupTableEditor
             SelectedNameTableParam = false;
             SelectedKeyParam = false;
             SelectedDependParam = false;
-            
+
             foreach (var element in ListParam)
             {
-
                 switch (element.SelectedRole)
                 {
                     case "Имя таблицы":
@@ -122,7 +64,6 @@ namespace LookupTableEditor
                     default:
                         break;
                 }
-
             }
         }
         public SelectParamViewModel GetSelectParamsForNewTable()

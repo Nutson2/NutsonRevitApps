@@ -7,7 +7,6 @@ using NRPUtils.MEPUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NRPUtils.Filters;
 
 namespace MEPGadgets
 {
@@ -19,8 +18,8 @@ namespace MEPGadgets
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var doc                  = commandData.Application.ActiveUIDocument.Document;
-            var uiDoc                = commandData.Application.ActiveUIDocument;
+            var doc   = commandData.Application.ActiveUIDocument.Document;
+            var uiDoc = commandData.Application.ActiveUIDocument;
             IList<Reference> selRefs = default;
             try
             {
@@ -47,7 +46,7 @@ namespace MEPGadgets
             if (!freeAppliancesConnectors.Any() || !freeOtherConnectors.Any()) return Result.Cancelled;
 
             ElementId pipeTypeId = new FilteredElementCollector(doc).OfClass(typeof(FlexPipeType)).FirstElementId();
-            
+
             using (Transaction tr = new Transaction(doc, "Connect appliances"))
             {
                 tr.Start();
@@ -60,7 +59,7 @@ namespace MEPGadgets
                         .FirstOrDefault();
                     if (curCon == null) continue;
                     if (con.Origin.DistanceTo(curCon.Origin) > UnitUtils.ConvertToInternalUnits(1, DisplayUnitType.DUT_METERS)) continue;
-                    
+
                     var fPipe = FlexPipe.Create(doc,
                                                 curCon.MEPSystem.GetTypeId(),
                                                 pipeTypeId,
@@ -70,7 +69,7 @@ namespace MEPGadgets
 
                     fPipe.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM).Set(con.Radius * 2);
                     fPipe.StartTangent = con.CoordinateSystem.BasisZ;
-                    fPipe.EndTangent   = curCon.CoordinateSystem.BasisZ.Negate();
+                    fPipe.EndTangent = curCon.CoordinateSystem.BasisZ.Negate();
 
                     foreach (Connector pipeCon in fPipe.ConnectorManager.UnusedConnectors)
                     {

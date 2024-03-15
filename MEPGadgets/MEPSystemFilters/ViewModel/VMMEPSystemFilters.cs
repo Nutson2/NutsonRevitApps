@@ -4,35 +4,32 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using NRPUtils.MVVMBase;
 using NRPUtils.Extentions;
-
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MEPGadgets.MEPSystemFilters.Model;
 
 namespace MEPGadgets.MEPSystemFilters
 {
-    public class VMMEPSystemFilters : NotifyObject
+    public partial class VMMEPSystemFilters : ObservableObject 
     {
         private readonly Document               doc;
-        private ParameterElement       filteredParameter;
-        private PipingSystem           selectedSystem;
-        private PipingSystemType       selectedType;
+        
+        [ObservableProperty]
         private List<PipingSystemType> systemTypes;
-        private string selectedCategoriesName;
-
-        public string SelectedCategoriesName { get => selectedCategoriesName; set { selectedCategoriesName = value; OnPropertyChanged(); } }
-        public PipingSystemType SelectedType
+        [ObservableProperty]
+        private PipingSystem           _selectedSystem;
+        [ObservableProperty]
+        private ParameterElement       _filteredParameter;
+        [ObservableProperty]
+        private PipingSystemType       _selectedType;
+        [ObservableProperty]
+        private string _selectedCategoriesName;
+        partial void OnSelectedTypeChanged(PipingSystemType value)
         {
-            get => selectedType;
-            set
-            {
-                selectedType = value;
-                UpdateSystemsList();
-                OnPropertyChanged();
-            }
+            UpdateSystemsList();
         }
-        public ParameterElement FilteredParameter { get => filteredParameter; set { filteredParameter = value; OnPropertyChanged(); } }
-        public PipingSystem SelectedSystem { get => selectedSystem; set { selectedSystem = value; OnPropertyChanged(); } }
-        public List<PipingSystemType> SystemTypes { get => systemTypes; set { systemTypes = value; OnPropertyChanged(); } }
+        
         public List<CategoryModel> Categories { get; set; } = new List<CategoryModel>();
         public ObservableCollection<ParameterElement> AllowedParametersFromSelectedCategories { get; set; } = new ObservableCollection<ParameterElement>();
         public ObservableCollection<PipingSystem> Systems { get; set; } = new ObservableCollection<PipingSystem>();
@@ -55,14 +52,16 @@ namespace MEPGadgets.MEPSystemFilters
 
         }
 
+        [RelayCommand]
         public void AddSelectedSystem() => SelectedSystems.Add(SelectedSystem);
+        [RelayCommand]
         public void CreateTaskForFilter()
         {
             if (SelectedSystems.Count == 0) return;
             TasksForFilters.Add(new ModelTaskForFilter(SelectedSystems.ToList()));
             SelectedSystems.Clear();
         }
-
+        [RelayCommand]
         internal void CreateView()
         {
             var element=new FilteredElementCollector(doc).OfClass(typeof(Pipe)).FirstOrDefault();
@@ -100,7 +99,7 @@ namespace MEPGadgets.MEPSystemFilters
             new FilteredElementCollector(doc)
                      .WherePasses(new ElementCategoryFilter(BuiltInCategory.OST_PipingSystem))
                      .WhereElementIsNotElementType()
-                     .Where(x => x.GetTypeId() == selectedType.Id)
+                     .Where(x => x.GetTypeId() == SelectedType.Id)
                      .Cast<PipingSystem>()
                      .OrderByDescending(x => x.PipingNetwork.Size)
                      .ToList()
@@ -122,7 +121,9 @@ namespace MEPGadgets.MEPSystemFilters
         {
             if (!Categories.Any()) return;
             UpdateAllowedParametersList(doc, Categories, AllowedParametersFromSelectedCategories);
-            SelectedCategoriesName = string.Join(",\n", Categories.Where(x => x.Selected).Select(x => x.Category.Name));
+            SelectedCategoriesName = string.Join(",\n", 
+                                                Categories.Where(x => x.Selected)
+                                                          .Select(x => x.Category.Name));
 
         }
         public void CreateView(Document doc, List<ElementId> CategoriesId,
@@ -183,47 +184,6 @@ namespace MEPGadgets.MEPSystemFilters
             paramsList.ForEach(x => parameterElements.Add(x));
             }
 
-    }
-
-    public class ModelTaskForFilter
-    {
-        public string Name
-        {
-            get
-            {
-                if (Systems.Count <= 0) return "";
-                return string.Join(", ", Systems.Select(x => x.Name));
-            }
-        }
-
-        public List<PipingSystem> Systems { get; set; }
-        public ModelTaskForFilter(List<PipingSystem> systems)
-        {
-            Systems = systems;
-        }
-    }
-    public class CategoryModel : NotifyObject
-    {
-        private Category category;
-        private bool     selected;
-
-        public Category Category
-        {
-            get { return category; }
-            set { category = value; }
-        }
-
-        public bool Selected
-        {
-            get { return selected; }
-            set { selected = value; OnPropertyChanged(); }
-        }
-
-        public CategoryModel(Category category)
-        {
-            Category = category;
-            Selected = false;
-        }
     }
 
 }

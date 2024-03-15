@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Профиль 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Autodesk\\Revit 2020\\Revit.exe",
+      "commandLineArgs": "/language RUS",
+      "workingDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020"
+    }
+  }
+}

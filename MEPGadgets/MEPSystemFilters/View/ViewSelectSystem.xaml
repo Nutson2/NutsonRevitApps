@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"    
+            xmlns:mepsystemfilters="clr-namespace:MEPGadgets.MEPSystemFilters" 
+            d:DataContext="{d:DesignInstance Type=mepsystemfilters:VMMEPSystemFilters}"
+            mc:Ignorable="d" 
              Width="850" Height="600"
              d:DesignHeight="350" d:DesignWidth="400">
     <Window.Resources>
@@ -57,7 +60,7 @@
             <StackPanel  >
             <TextBlock Text="Выберите параметр" FontSize="12"
                        ToolTip='В выбранный параметр будет скопированно значение из системного параметра "Имя системы" и созданы фильтры'
-                        ToolTipService.InitialShowDelay="100"/>
+                       ToolTipService.InitialShowDelay="100"/>
 
             <ComboBox ItemsSource="{Binding AllowedParametersFromSelectedCategories}"
                   DisplayMemberPath="Name"
@@ -71,8 +74,8 @@
                  SelectionMode="Single" 
                  SelectedItem="{Binding SelectedType}"
                  Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"/>
-        <ListBox ItemsSource="{Binding Systems}" SelectionMode="Single" SelectedItem="{Binding SelectedSystem}"
-                 MouseDoubleClick="ListBox_MouseDoubleClick"
+        <ListBox ItemsSource="{Binding Systems}" SelectionMode="Single" 
+                 SelectedItem="{Binding SelectedSystem}"
                  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -83,6 +86,12 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction
+                        Command="{Binding AddSelectedSystemCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </ListBox>
         <ListBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"
                  ItemsSource="{Binding SelectedSystems}" 
@@ -93,11 +102,14 @@
                  DisplayMemberPath="Name" SelectionMode="Single"
                  Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="2"/>
         <Button Margin="20,1,1,1" Grid.Column="2" Grid.ColumnSpan="2" 
-                Name="ButCreateView" Click="ButCreateView_Click" >
-            <TextBlock FontSize="11" Text="Создать виды" TextWrapping="Wrap" TextAlignment="Center"/>
+                Name="ButCreateView" 
+                Command="{Binding CreateViewCommand}">
+            
+        <TextBlock FontSize="11" Text="Создать виды" TextWrapping="Wrap" TextAlignment="Center"/>
         </Button>
         <Button Grid.Column="1" Grid.Row="4" Content="Добавить в список"
-                Name="ButAddTask" Click="ButAddTask_Click"/>
+                Name="ButAddTask" 
+                Command="{Binding CreateTaskForFilterCommand}"/>
         
 
     </Grid>

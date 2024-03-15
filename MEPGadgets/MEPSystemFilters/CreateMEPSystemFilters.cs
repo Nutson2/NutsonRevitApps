@@ -1,11 +1,10 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using MEPGadgets.MEPSystemFilters;
 using MEPGadgets.MEPSystemFilters.View;
 using System.Linq;
 
-namespace MEPGadgets
+namespace MEPGadgets.MEPSystemFilters
 {
 
     [Transaction(TransactionMode.Manual)]
@@ -14,12 +13,12 @@ namespace MEPGadgets
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var doc=commandData.Application.ActiveUIDocument.Document;
+            var doc = commandData.Application.ActiveUIDocument.Document;
 
-            var VM=new VMMEPSystemFilters(doc);
+            var VM = new VMMEPSystemFilters(doc);
             LoadUserSettings(VM);
 
-            var view=new ViewSelectSystem(VM);
+            var view = new ViewSelectSystem(VM);
             view.ShowDialog();
 
             SaveSettings(VM);
@@ -29,9 +28,9 @@ namespace MEPGadgets
 
         private void LoadUserSettings(VMMEPSystemFilters vM)
         {
-            var settings=Settings.Default;
-            if(settings.ViewCreaterSelectedCategories != null ||
-                settings.ViewCreaterSelectedCategories?.Count>0) 
+            var settings = Settings.Default;
+            if (settings.ViewCreaterSelectedCategories != null ||
+                settings.ViewCreaterSelectedCategories?.Count > 0)
             {
                 vM.Categories.ForEach(c =>
                 {
@@ -41,17 +40,17 @@ namespace MEPGadgets
                     }
                 });
             }
-            if(!string.IsNullOrEmpty(settings.ViewCreateSelParameter))
+            if (!string.IsNullOrEmpty(settings.ViewCreateSelParameter))
             {
-                vM.FilteredParameter= vM.AllowedParametersFromSelectedCategories
+                vM.FilteredParameter = vM.AllowedParametersFromSelectedCategories
                         .Where(x => x.Name == settings.ViewCreateSelParameter)
                         .FirstOrDefault();
             }
         }
         private void SaveSettings(VMMEPSystemFilters vM)
         {
-            var settings=Settings.Default;
-            settings.ViewCreaterSelectedCategories=new System.Collections.Specialized.StringCollection();
+            var settings = Settings.Default;
+            settings.ViewCreaterSelectedCategories = new System.Collections.Specialized.StringCollection();
             settings.ViewCreaterSelectedCategories.AddRange(
                 vM.Categories.Where(c => c.Selected)
                             .Select(c => c.Category.Name)

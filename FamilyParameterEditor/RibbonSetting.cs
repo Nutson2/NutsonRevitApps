@@ -1,6 +1,5 @@
 ﻿using System;
 using Autodesk.Revit.UI;
-using FamilyParameterEditor.EditFamiliesParameters.ViewModel;
 using NutsonApp;
 
 namespace FamilyParameterEditor

@@ -1,26 +1,14 @@
 ﻿using Autodesk.Revit.DB;
-using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using NRPUtils.MVVMBase;
 
 namespace LookupTableEditor
 {
-    public class SelectParamModel : NotifyObject
+    public partial class SelectParamModel : ObservableObject 
     {
+        [ObservableProperty]
+        private string _selectedRole;
         public string Name { get; set; }
-        private string selectedRole;
-        public string SelectedRole 
-        {
-            get { return selectedRole; }
-            set
-            {
-                selectedRole = value;
-                OnPropertyChanged();
-            }
-        }
         public List<string> Role { get; set; }
         public FamilyParameter FamilyParam { get; set; }
 

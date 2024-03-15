@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using NRPUtils.MVVMBase;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 
 namespace CopyParametersGadgets.WriteCalculation.Model
 {
-    public class CalculationModel : NotifyObject
+    public partial class CalculationModel : ObservableObject
     {
-        private string category;
-        private string parameterForWrite;
-        private string parameterForSumming;
-        public string Category { get => category; set { category = value; OnPropertyChanged(); } }
-        public string ParameterForWrite { get => parameterForWrite; set { parameterForWrite = value; OnPropertyChanged(); } }
-        public string ParameterForSumming { get => parameterForSumming; set { parameterForSumming = value; OnPropertyChanged(); } }
+        [ObservableProperty]
+        private string _category;
+        [ObservableProperty]
+        private string _parameterForWrite;
+        [ObservableProperty]
+        private string _parameterForSumming;
+
         public List<string> Categories { get; set; } = new List<string>();
         public List<string> AvailableParametersForWrite { get; set; } = new List<string>();
         public List<string> AvailableParametersForSumming { get; set; } = new List<string>();

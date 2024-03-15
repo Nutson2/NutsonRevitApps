@@ -4,19 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FamilyParameterEditor.FM.Model
 {
-    public class FamilyModel : NotifyObject
+    public partial class FamilyModel : ObservableObject
     {
-		private string            name;
+        [ObservableProperty]
+		private string            _name;
 		private string            path;
 		private Document          familyDocument;
 
         public readonly Document          document;
 		public readonly FamilyStorageType storageType;
 
-        public string Name { get { return name; } set { name = value; OnPropertyChanged(); } }
         public string Path { get { return path; } set { path = value; } }
         public Family Family { get; set; }
         public Document FamilyDocument { get => GetFamDocument(); set => familyDocument = value; }
@@ -47,10 +48,7 @@ namespace FamilyParameterEditor.FM.Model
 
         private Document GetFamDocument() 
         {
-            if (familyDocument == null)
-            {
-                familyDocument = FamiliesLoader.LoadFamily(this);
-            }
+            familyDocument ??= FamiliesLoader.LoadFamily(this);
             return familyDocument;
         }
 

@@ -1,7 +1,5 @@
 ﻿using Autodesk.Revit.DB;
-using System.Data;
 using System.Linq;
-using Autodesk.Revit.DB;
 
 
 namespace LookupTableEditor
@@ -31,7 +29,7 @@ namespace LookupTableEditor
 
             string keys=string.Empty;
             _sizeTableUtility.KeyParameters.Select(x => x.Definition.Name).ToList().ForEach(x => keys += $", {x}");
-            
+
             var res=$"size_lookup({TableName}, \"{ColumnName}\", \"{DefaultValue}\" {keys})";
             return res;
         }

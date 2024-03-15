@@ -6,6 +6,7 @@
     <TargetFrameworks>net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>C:\ProgramData\Autodesk\Revit\Addins\2020</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
@@ -16,8 +17,12 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="2020.2.60" />
     <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2020.2.60" />
     <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2020.2.60" />

@@ -1,44 +1,32 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using FamilyParameterEditor.FM.Model;
-using NRPUtils.MVVMBase;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace FamilyParameterEditor.FM.ViewModel
 {
-    public class VMFamiliesEditor : NRPUtils.MVVMBase.NotifyObject
+    public partial class VMFamiliesEditor : ObservableObject
     {
         #region private
         private readonly ExternalCommandData               externalCommandData;
         private readonly RevitTask                         revitTask;
         private readonly Document                          document;
         private ObservableCollection<FamilyModel> families;
-        private Category                          selectedCategory;
-        private string                            selectedPath;
-        private RelayCommand                      selectFamiliesFolder;
+
+        [ObservableProperty]
+        private string                            _selectedPath;
         #endregion
 
         #region property    
 
         public ObservableCollection<FamilyModel> Families { get { return families; } set { families = value; } }
-        public Category SelectedCategory { get { return selectedCategory; } set { selectedCategory = value; } }
-        public string SelectedPath { get { return selectedPath; } set { selectedPath = value; OnPropertyChanged(); } }
-
-        public RelayCommand SelectFamiliesFolder
-        {
-            get
-            {
-                return selectFamiliesFolder ?? (selectFamiliesFolder = new RelayCommand(obj =>
-            {
-                selectFamFolder(); 
-            }));
-            }
-        }
-
+        public Category SelectedCategory { get ;  set ;  }
 
         #endregion
 
@@ -109,8 +97,8 @@ namespace FamilyParameterEditor.FM.ViewModel
 
             return res;
         }
-
-        private void selectFamFolder()
+        [RelayCommand]
+        public void SelectFamFolder()
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)

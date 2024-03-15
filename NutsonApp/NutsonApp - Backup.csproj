@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>6.0</LangVersion>
     <TargetFrameworks>net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>C:\ProgramData\Autodesk\Revit\Addins\2020\NutsonAppExternalCommand</OutputPath>
-
+    <OutputPath>C:\ProgramData\Autodesk\Revit\Addins\2020</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
@@ -17,6 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
+
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="2020.2.60" />
     <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2020.2.60" />
     <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2020.2.60" />
   </ItemGroup>
@@ -41,6 +42,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

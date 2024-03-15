@@ -12,12 +12,11 @@ namespace FamilyParameterEditor
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            //commandData.Application.DialogBoxShowing += Application_DialogBoxShowing;
             var RevitTask=new RevitTask();
 
             var view=new EditFamiliesParameters.View.EditFamilyFormulaView(commandData, RevitTask);
             view.Show();
-            
+
             return Result.Succeeded;
         }
 
@@ -57,39 +56,19 @@ namespace FamilyParameterEditor
         }
 
         public void DoFailureProcessing(object sender, FailuresProcessingEventArgs args)
-    {
-        FailuresAccessor fa = args.GetFailuresAccessor();         // Inside event handler, get all warnings
-        IList<FailureMessageAccessor> a = fa.GetFailureMessages();
-        int count = 0;
-        foreach (FailureMessageAccessor failure in a)
-        { 
-            TaskDialog.Show("Failure", failure.GetDescriptionText()); fa.ResolveFailure(failure);
-            ++count; 
-        }
-        if (0 < count && args.GetProcessingResult() == FailureProcessingResult.Continue)
-        { 
-            args.SetProcessingResult(FailureProcessingResult.ProceedWithCommit); 
-        }
-    }
-    }
-    public class FamilyLoadOption : IFamilyLoadOptions
-    {
-        public bool OnFamilyFound(bool familyInUse, out bool overwriteParameterValues)
         {
-            overwriteParameterValues = false;
-            return true;
-        }
-
-        public bool OnSharedFamilyFound(Family sharedFamily, 
-                                        bool familyInUse, 
-                                        out FamilySource source, 
-                                        out bool overwriteParameterValues)
-        {
-            source = FamilySource.Project;
-            overwriteParameterValues = true;
-            return true;
+            FailuresAccessor fa = args.GetFailuresAccessor();         // Inside event handler, get all warnings
+            IList<FailureMessageAccessor> a = fa.GetFailureMessages();
+            int count = 0;
+            foreach (FailureMessageAccessor failure in a)
+            {
+                TaskDialog.Show("Failure", failure.GetDescriptionText()); fa.ResolveFailure(failure);
+                ++count;
+            }
+            if (0 < count && args.GetProcessingResult() == FailureProcessingResult.Continue)
+            {
+                args.SetProcessingResult(FailureProcessingResult.ProceedWithCommit);
+            }
         }
     }
-    
-
 }
