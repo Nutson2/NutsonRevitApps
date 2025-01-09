@@ -1,9 +1,5 @@
-﻿using Autodesk.Revit.DB;
-using NRPUtils.MVVMBase;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using Autodesk.Revit.DB;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FamilyParameterEditor.FM.Model
@@ -11,16 +7,24 @@ namespace FamilyParameterEditor.FM.Model
     public partial class FamilyModel : ObservableObject
     {
         [ObservableProperty]
-		private string            _name;
-		private string            path;
-		private Document          familyDocument;
+        private string _name;
+        private string path;
+        private Document familyDocument;
 
-        public readonly Document          document;
-		public readonly FamilyStorageType storageType;
+        public readonly Document document;
+        public readonly FamilyStorageType storageType;
 
-        public string Path { get { return path; } set { path = value; } }
+        public string Path
+        {
+            get { return path; }
+            set { path = value; }
+        }
         public Family Family { get; set; }
-        public Document FamilyDocument { get => GetFamDocument(); set => familyDocument = value; }
+        public Document FamilyDocument
+        {
+            get => GetFamDocument();
+            set => familyDocument = value;
+        }
 
         public FamilyModel(Document document, string path)
         {
@@ -30,6 +34,7 @@ namespace FamilyParameterEditor.FM.Model
             Name = new FileInfo(Path).Name;
             storageType = FamilyStorageType.InDirectory;
         }
+
         public FamilyModel(Family family)
         {
             Family = family;
@@ -37,6 +42,7 @@ namespace FamilyParameterEditor.FM.Model
             storageType = FamilyStorageType.InDocument;
             document = family.Document;
         }
+
         public FamilyModel(Document famDocument, Family family)
         {
             Family = family;
@@ -46,17 +52,17 @@ namespace FamilyParameterEditor.FM.Model
             storageType = FamilyStorageType.Opened;
         }
 
-        private Document GetFamDocument() 
+        private Document GetFamDocument()
         {
             familyDocument ??= FamiliesLoader.LoadFamily(this);
             return familyDocument;
         }
-
     }
+
     public enum FamilyStorageType
     {
         InDocument,
         InDirectory,
-        Opened
+        Opened,
     }
 }

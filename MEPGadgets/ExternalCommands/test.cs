@@ -1,7 +1,7 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace MEPGadgets
 {
@@ -19,13 +19,25 @@ namespace MEPGadgets
 
                 // Criterion 1 - wall type Function is "Exterior"
                 ElementId exteriorParamId = new ElementId(BuiltInParameter.FUNCTION_PARAM);
-                elementFilterList.Add(new ElementParameterFilter(ParameterFilterRuleFactory.CreateEqualsRule(exteriorParamId, (int)WallFunction.Exterior)));
+                elementFilterList.Add(
+                    new ElementParameterFilter(
+                        ParameterFilterRuleFactory.CreateEqualsRule(
+                            exteriorParamId,
+                            (int)WallFunction.Exterior
+                        )
+                    )
+                );
 
                 // Criterion 2 - wall length > = 28 or < = 14
                 ElementId lengthId = new ElementId(BuiltInParameter.CURVE_ELEM_LENGTH);
                 LogicalOrFilter wallHeightFilter = new LogicalOrFilter(
-                    new ElementParameterFilter(ParameterFilterRuleFactory.CreateGreaterOrEqualRule(lengthId, 28.0, 0.00001)),
-                    new ElementParameterFilter(ParameterFilterRuleFactory.CreateLessOrEqualRule(lengthId, 14.0, 0.00001)));
+                    new ElementParameterFilter(
+                        ParameterFilterRuleFactory.CreateGreaterOrEqualRule(lengthId, 28.0, 0.00001)
+                    ),
+                    new ElementParameterFilter(
+                        ParameterFilterRuleFactory.CreateLessOrEqualRule(lengthId, 14.0, 0.00001)
+                    )
+                );
                 elementFilterList.Add(wallHeightFilter);
 
                 // Criterion 3 - custom shared parameter value matches string pattern
@@ -40,14 +52,33 @@ namespace MEPGadgets
                     Parameter sharedParam = wall.get_Parameter(spGuid);
                     ElementId sharedParamId = sharedParam.Id;
 
-                    elementFilterList.Add(new ElementParameterFilter(ParameterFilterRuleFactory.CreateBeginsWithRule(sharedParamId, "15.", true)));
+                    elementFilterList.Add(
+                        new ElementParameterFilter(
+                            ParameterFilterRuleFactory.CreateBeginsWithRule(
+                                sharedParamId,
+                                "15.",
+                                true
+                            )
+                        )
+                    );
                 }
 
                 // Create filter element associated to the input categories
                 LogicalAndFilter andFilter = new LogicalAndFilter(elementFilterList);
-                if (ParameterFilterElement.ElementFilterIsAcceptableForParameterFilterElement(doc, new HashSet<ElementId>(categories), andFilter))
+                if (
+                    ParameterFilterElement.ElementFilterIsAcceptableForParameterFilterElement(
+                        doc,
+                        new HashSet<ElementId>(categories),
+                        andFilter
+                    )
+                )
                 {
-                    ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(doc, "Example view filter", categories, andFilter);
+                    ParameterFilterElement parameterFilterElement = ParameterFilterElement.Create(
+                        doc,
+                        "Example view filter",
+                        categories,
+                        andFilter
+                    );
 
                     // Apply filter to view
                     view.AddFilter(parameterFilterElement.Id);

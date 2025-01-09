@@ -4,11 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
-
+using Nice3point.Revit.Extensions;
 using NRPUtils.Extentions;
 
 namespace CopyParametersGadgets.Command
@@ -16,15 +15,15 @@ namespace CopyParametersGadgets.Command
     public class ServiceCopyParametersValue
     {
         // csharpier-ignore-start
-        public int Id { get; set; }
-        public double Distance { get; set; }
-        public string DistanceType { get; set; }
-        public string DistanceMeasurement { get; set; }
-        public double NormativeDistance { get; set; }
-        public double LocationX { get; set; }
-        public double LocationY { get; set; }
-        public double LocationZ { get; set; }
-        public long SourceElementId { get; set; }
+		public int Id { get; set; }
+		public double Distance { get; set; }
+		public string DistanceType { get; set; }
+		public string DistanceMeasurement { get; set; }
+		public double NormativeDistance { get; set; }
+		public double LocationX { get; set; }
+		public double LocationY { get; set; }
+		public double LocationZ { get; set; }
+		public long SourceElementId { get; set; }
         // csharpier-ignore-end
 
         // csharpier-ignore-start
@@ -150,7 +149,7 @@ namespace CopyParametersGadgets.Command
                 BuiltInCategory.OST_PipeAccessory,
                 BuiltInCategory.OST_FlexPipeCurves,
                 BuiltInCategory.OST_PlumbingFixtures,
-                BuiltInCategory.OST_MechanicalEquipment
+                BuiltInCategory.OST_MechanicalEquipment,
             };
 
             var filter = new ElementMulticategoryFilter(CatList);
@@ -194,10 +193,8 @@ namespace CopyParametersGadgets.Command
             var OD = el.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER);
             var ID = el.get_Parameter(BuiltInParameter.RBS_PIPE_INNER_DIAM_PARAM);
             var Dy = el.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM);
-            var t = UnitUtils.ConvertFromInternalUnits(
-                (OD.AsDouble() - ID.AsDouble()) * 0.5,
-                DisplayUnitType.DUT_MILLIMETERS
-            );
+
+            var t = UnitExtensions.ToMillimeters((OD.AsDouble() - ID.AsDouble()) * 0.5);
 
             var markParts = pipeMark.Split('x');
 
@@ -241,10 +238,7 @@ namespace CopyParametersGadgets.Command
 
             var resultString = string.Empty;
             var Thikness = el.get_Parameter(BuiltInParameter.RBS_INSULATION_THICKNESS_FOR_PIPE);
-            var Thikness_mm = UnitUtils.ConvertFromInternalUnits(
-                Thikness.AsDouble(),
-                DisplayUnitType.DUT_MILLIMETERS
-            );
+            var Thikness_mm = UnitExtensions.ToMillimeters(Thikness.AsDouble());
 
             if (string.IsNullOrEmpty(insTypeComment))
                 return;
@@ -264,9 +258,8 @@ namespace CopyParametersGadgets.Command
                         .ToDictionary(x => x[0], x => x.Skip(1).ToArray());
                     cachedData.InsulationSizes.Add(insTypeId, currentTypeSizes);
                 }
-                var pipeOD = UnitUtils.ConvertFromInternalUnits(
-                    hostEl.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(),
-                    DisplayUnitType.DUT_MILLIMETERS
+                var pipeOD = UnitExtensions.ToMillimeters(
+                    hostEl.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble()
                 );
                 var insulationID = currentTypeSizes[(int)Thikness_mm]
                     .FirstOrDefault(x => x >= pipeOD);
@@ -333,10 +326,7 @@ namespace CopyParametersGadgets.Command
 
             O_Col.Set(
                 Math.Round(
-                    UnitUtils.ConvertFromInternalUnits(
-                        length.AsDouble() * vm.PipeSafetyFactor,
-                        DisplayUnitType.DUT_METERS
-                    ),
+                    UnitExtensions.ToMillimeters(length.AsDouble() * vm.PipeSafetyFactor),
                     vm.PipeRound
                 )
             );
@@ -349,25 +339,18 @@ namespace CopyParametersGadgets.Command
             if (parentEl is Pipe pipe)
             {
                 var length = Math.Round(
-                    UnitUtils.ConvertFromInternalUnits(
+                    UnitExtensions.ToMillimeters(
                         el.get_Parameter(BuiltInParameter.CURVE_ELEM_LENGTH).AsDouble()
-                            * vm.PipeInsulationSafetyFactor,
-                        DisplayUnitType.DUT_METERS
+                            * vm.PipeInsulationSafetyFactor
                     ),
                     vm.InsulationRound
                 );
 
-                var d = UnitUtils.ConvertFromInternalUnits(
-                    pipe.Diameter,
-                    DisplayUnitType.DUT_MILLIMETERS
-                );
+                var d = UnitExtensions.ToMillimeters(pipe.Diameter);
                 if (d > 160)
                 {
                     var t = el.get_Parameter(BuiltInParameter.RBS_INSULATION_THICKNESS_FOR_PIPE);
-                    var t_mm = UnitUtils.ConvertFromInternalUnits(
-                        t.AsDouble(),
-                        DisplayUnitType.DUT_MILLIMETERS
-                    );
+                    var t_mm = UnitExtensions.ToMillimeters(t.AsDouble());
                     length = length * Math.PI * (d + t_mm) / 1000;
                 }
                 var O_Col = el.LookupParameter("О_Количество");
@@ -508,7 +491,7 @@ namespace CopyParametersGadgets.Command
                     { BuiltInCategory.OST_FlexPipeCurves, "4. Трубопроводы" },
                     { BuiltInCategory.OST_PipeFitting, "4. Трубопроводы" },
                     { BuiltInCategory.OST_PipeCurves, "4. Трубопроводы" },
-                    { BuiltInCategory.OST_PipeInsulations, "5. Конструкции теплоизоляционные" }
+                    { BuiltInCategory.OST_PipeInsulations, "5. Конструкции теплоизоляционные" },
                 };
             }
         }

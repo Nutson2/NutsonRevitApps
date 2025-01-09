@@ -1,10 +1,8 @@
 ﻿using Autodesk.Revit.DB;
-using NRPUtils.MVVMBase;
-
 
 namespace MEPGadgets.Scheme.Model
 {
-    public class SchemeElement: NotifyObject
+    public class SchemeElement : NotifyObject
     {
         #region for Form
 
@@ -26,7 +24,6 @@ namespace MEPGadgets.Scheme.Model
             {
                 isExpanded = value;
                 OnPropertyChanged();
-
             }
         }
 
@@ -40,19 +37,24 @@ namespace MEPGadgets.Scheme.Model
         public SchemeBranch Branch { get; private set; }
         public BasePressureCalculator PressureCalculator { get; private set; }
 
-        public SchemeElement(SchemeBranch Branch, Element RevitElement, SchemeElement previousElement=null)
+        public SchemeElement(
+            SchemeBranch Branch,
+            Element RevitElement,
+            SchemeElement previousElement = null
+        )
         {
             this.Branch = Branch;
             this.RevitElement = RevitElement;
             PreviousElement = previousElement;
 
-            Name = this.Branch.Name + " элемент: " +  (this.Branch.Elements.Count+1).ToString();
+            Name = this.Branch.Name + " элемент: " + (this.Branch.Elements.Count + 1).ToString();
             CollectInfo();
         }
+
         private void CollectInfo()
         {
             Category = RevitElement.Category.Name;
-            Size=RevitElement.LookupParameter("Размер")?.AsString();
+            Size = RevitElement.LookupParameter("Размер")?.AsString();
         }
     }
 }

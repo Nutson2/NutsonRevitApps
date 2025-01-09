@@ -4,23 +4,26 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autodesk.Revit.UI;
+using Autodesk.Windows;
 
 namespace NutsonApp
 {
-
     public class NutsonBaseExternalApplication : IExternalApplication
     {
-        public static List<string>                         newAssemblyInFolder    = default;
+        public static List<string> newAssemblyInFolder = default;
         public static Dictionary<string, IExternalCommand> NutsonExternalCommands = default;
-        public static string                               CurrentAssemblyFullName { get; set; }
-        public static UIControlledApplication              UIControlledRevit      = default;
-        private static RibbonBuilder                       ribbonBuilder          = default;
+        public static string CurrentAssemblyFullName { get; set; }
+        public static UIControlledApplication UIControlledRevit = default;
+        private static RibbonBuilder ribbonBuilder = default;
 
         const string ExternalCommandsFolder = "NutsonAppExternalCommand";
         static readonly string tabName = "Nutson";
 
+        public static string CalledCommand { get; private set; }
+
         ExternalEvent ExternalEvent = null;
         FileSystemWatcher fileWatcher = default;
+
         public Result OnShutdown(UIControlledApplication application)
         {
             fileWatcher.Changed -= FileWatcher_Changed;
@@ -29,16 +32,21 @@ namespace NutsonApp
 
             return Result.Succeeded;
         }
+
         public Result OnStartup(UIControlledApplication application)
         {
-            UIControlledRevit      = application;
+            ComponentManager.PreviewExecute += ComponentManager_PreviewExecute;
+
+            UIControlledRevit = application;
             NutsonExternalCommands = new Dictionary<string, IExternalCommand>();
-            newAssemblyInFolder    = new List<string>();
-            ribbonBuilder          = new RibbonBuilder(application, tabName);
+            newAssemblyInFolder = new List<string>();
+            ribbonBuilder = new RibbonBuilder(application, tabName);
 
             CurrentAssemblyFullName = Assembly.GetExecutingAssembly().Location;
-            var exCmdPath = Path.GetDirectoryName(CurrentAssemblyFullName) + "\\" + ExternalCommandsFolder;
-            if (!Directory.Exists(exCmdPath)) Directory.CreateDirectory(exCmdPath);
+            var exCmdPath =
+                Path.GetDirectoryName(CurrentAssemblyFullName) + "\\" + ExternalCommandsFolder;
+            if (!Directory.Exists(exCmdPath))
+                Directory.CreateDirectory(exCmdPath);
 
             #region FileSystemWatcher
 
@@ -54,18 +62,27 @@ namespace NutsonApp
 
             #endregion
 
-            LoadExternalCommand(Directory.GetFiles(exCmdPath)
-                                        .Where(x => Path.GetExtension(x) == ".dll")
-                                        .ToList());
+            LoadExternalCommand(
+                Directory.GetFiles(exCmdPath).Where(x => Path.GetExtension(x) == ".dll").ToList()
+            );
 
             return Result.Succeeded;
         }
 
+        private void ComponentManager_PreviewExecute(object sender, EventArgs e)
+        {
+            if (sender is Autodesk.Windows.RibbonButton button)
+            {
+                CalledCommand = button.Id.Split('%').Last();
+            }
+        }
+
         public static void LoadExternalCommand(IList<string> AssemblyFileCollection)
         {
-            if (AssemblyFileCollection == null || AssemblyFileCollection.Count == 0) return;
+            if (AssemblyFileCollection == null || AssemblyFileCollection.Count == 0)
+                return;
 
-            using (AssemLoader al=new AssemLoader())
+            using (AssemLoader al = new AssemLoader())
             {
                 var proxyCommandType = typeof(ProxyCommand);
                 try
@@ -73,30 +90,47 @@ namespace NutsonApp
                     foreach (string assemblyFile in AssemblyFileCollection)
                     {
                         var loadedAsm = al.LoadAddinsFromTempFolder(assemblyFile);
-                        if(loadedAsm==null) continue;
-                        var asmRibbonSetting = loadedAsm.GetTypes().Where(x => x.Name == "RibbonSetting").FirstOrDefault();
-                        if (asmRibbonSetting == null) continue;
+                        if (loadedAsm == null)
+                            continue;
+                        var asmRibbonSetting = loadedAsm
+                            .GetTypes()
+                            .Where(x => x.Name == "RibbonSetting")
+                            .FirstOrDefault();
+                        if (asmRibbonSetting == null)
+                            continue;
 
-                        var asmMethod = asmRibbonSetting.GetMethods().Where(x => x.Name == "AddCommandToRibbon").First();
-                        asmMethod.Invoke(asmMethod, new object[] { ribbonBuilder, proxyCommandType });
-               
-                        var asmCommands = loadedAsm.GetTypes().Where(x=>x.GetInterfaces().Contains(typeof(IExternalCommand)));
+                        var asmMethod = asmRibbonSetting
+                            .GetMethods()
+                            .Where(x => x.Name == "AddCommandToRibbon")
+                            .First();
+                        asmMethod.Invoke(
+                            asmMethod,
+                            new object[] { ribbonBuilder, proxyCommandType }
+                        );
+
+                        var asmCommands = loadedAsm
+                            .GetTypes()
+                            .Where(x => x.GetInterfaces().Contains(typeof(IExternalCommand)));
                         foreach (var item in asmCommands)
                         {
-                            if (!(loadedAsm.CreateInstance(item.FullName) is IExternalCommand command)) continue;
+                            if (
+                                !(
+                                    loadedAsm.CreateInstance(item.FullName)
+                                    is IExternalCommand command
+                                )
+                            )
+                                continue;
                             if (NutsonExternalCommands.ContainsKey(item.Name))
-                                NutsonExternalCommands[item.Name] = command ;
+                                NutsonExternalCommands[item.Name] = command;
                             else
-                                NutsonExternalCommands.Add(item.Name, command );
+                                NutsonExternalCommands.Add(item.Name, command);
                         }
                     }
-
                 }
                 finally
                 {
                     AssemblyFileCollection.Clear();
                 }
-
             }
         }
 
@@ -106,33 +140,40 @@ namespace NutsonApp
             FillNewAssemblyCollection(e);
             ExternalEvent.Raise();
         }
+
         private void FileWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             FillNewAssemblyCollection(e);
             ExternalEvent.Raise();
         }
+
         private void FileWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             FillNewAssemblyCollection(e);
             ExternalEvent.Raise();
         }
+
         private void FillNewAssemblyCollection(FileSystemEventArgs e)
         {
             //newAssemblyInFolder = null;
-            if (e.ChangeType == WatcherChangeTypes.Changed || e.ChangeType == WatcherChangeTypes.Created)
+            if (
+                e.ChangeType == WatcherChangeTypes.Changed
+                || e.ChangeType == WatcherChangeTypes.Created
+            )
             {
-                if(!newAssemblyInFolder.Contains(e.FullPath))
+                if (!newAssemblyInFolder.Contains(e.FullPath))
                     newAssemblyInFolder.Add(e.FullPath);
-
             }
         }
         #endregion
     }
-    class ExternalCommandAttribute:Attribute
+
+    class ExternalCommandAttribute : Attribute
     {
         public string PanelName { get; }
         public string ButtonName { get; }
         public string ButtonTooltip { get; }
+
         public ExternalCommandAttribute(string panelName, string buttonName, string buttonTooltip)
         {
             PanelName = panelName;

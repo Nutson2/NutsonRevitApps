@@ -19,6 +19,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+       
         <TreeView x:Name="treeView"
                   SelectedItemChanged="TreeView_SelectedItemChanged" 
                   MouseDoubleClick="TreeView_MouseDoubleClick"
@@ -28,6 +29,7 @@
                                           ItemsSource="{Binding Items}" >
                     <Label Content="{Binding Name}"  />
                 </HierarchicalDataTemplate>
+               
                 <DataTemplate DataType="{x:Type model:SchemeElement}">
                     <Border CornerRadius="3" BorderThickness="1">
                         <Border.BorderBrush>

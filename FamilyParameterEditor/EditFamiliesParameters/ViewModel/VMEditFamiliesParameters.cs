@@ -1,10 +1,10 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
 {
@@ -12,25 +12,30 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
     {
         #region private
         private DefinitionFile SHF;
-        private readonly List<Document> familiesDocuments= new List<Document>();
+        private readonly List<Document> familiesDocuments = new List<Document>();
 
         [ObservableProperty]
         private Category _selectedCategory;
+
         [ObservableProperty]
         private Definition _definition;
+
         [ObservableProperty]
         private DefinitionGroup _selectedGroup;
         #endregion
 
         #region collections
 
-        public ObservableCollection<FamilyModel> Families { get; set; } = new ObservableCollection<FamilyModel>();
-        public ObservableCollection<DefinitionGroup> SharedParametersGroup { get; set; } = new ObservableCollection<DefinitionGroup>();
-        public ObservableCollection<Definition> SharedParametersDefinitions { get; set; } = new ObservableCollection<Definition>();
+        public ObservableCollection<FamilyModel> Families { get; set; } =
+            new ObservableCollection<FamilyModel>();
+        public ObservableCollection<DefinitionGroup> SharedParametersGroup { get; set; } =
+            new ObservableCollection<DefinitionGroup>();
+        public ObservableCollection<Definition> SharedParametersDefinitions { get; set; } =
+            new ObservableCollection<Definition>();
         public List<Category> Category { get; set; } = new List<Category>();
         #endregion
 
-        #region property    
+        #region property
         public RevitTask RevitTask { get; set; }
         public Document Document { get; set; }
         #endregion
@@ -41,18 +46,22 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
             RevitTask = revitTask;
 
             var EnumCategory = new List<BuiltInCategory>()
-                    {
-                        BuiltInCategory.OST_PipeAccessory,
-                        BuiltInCategory.OST_PlumbingFixtures,
-                        BuiltInCategory.OST_PipeFitting,
-                        BuiltInCategory.OST_MechanicalEquipment
-                    };
-            EnumCategory.ForEach(x => { Category.Add(Autodesk.Revit.DB.Category.GetCategory(Document, x)); });
+            {
+                BuiltInCategory.OST_PipeAccessory,
+                BuiltInCategory.OST_PlumbingFixtures,
+                BuiltInCategory.OST_PipeFitting,
+                BuiltInCategory.OST_MechanicalEquipment,
+            };
+            EnumCategory.ForEach(x =>
+            {
+                Category.Add(Autodesk.Revit.DB.Category.GetCategory(Document, x));
+            });
 
             SelectedCategory = Category.First();
 
             Init();
         }
+
         public void ApplyNewFormula()
         {
             RevitTask.Run(uiApp =>
@@ -70,6 +79,7 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
                 }
             });
         }
+
         public void Dispose()
         {
             RevitTask.Run(uiApp =>
@@ -90,15 +100,21 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
         private void Init()
         {
             SHF = Document.Application.OpenSharedParameterFile();
-            SHF.Groups.ToList().ForEach(g => { SharedParametersGroup.Add(g); });
+            SHF.Groups.ToList()
+                .ForEach(g =>
+                {
+                    SharedParametersGroup.Add(g);
+                });
             FillDefinitionFromGroup();
             FillFamilies();
         }
+
         private void FillFamilies()
         {
             Families.Clear();
 
-            EditorFamiliesParameters.GetFamiliesInDocument(Document, ToBuiltInCategory(SelectedCategory))
+            EditorFamiliesParameters
+                .GetFamiliesInDocument(Document, ToBuiltInCategory(SelectedCategory))
                 .Select(x => new FamilyModel(x))
                 .ToList()
                 .ForEach(x =>
@@ -106,7 +122,8 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
                     familiesDocuments.Add(x.OpenFamily(Document));
                     Families.Add(x);
                 });
-            if (Definition is null) return;
+            if (Definition is null)
+                return;
             FillFamiliesParameterValue(Document, Definition);
         }
 
@@ -119,10 +136,9 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
         {
             SharedParametersDefinitions.Clear();
             SelectedGroup ??= SharedParametersGroup.FirstOrDefault();
-            SelectedGroup.Definitions
-                .ToList()
-                .ForEach(i => SharedParametersDefinitions.Add(i));
+            SelectedGroup.Definitions.ToList().ForEach(i => SharedParametersDefinitions.Add(i));
         }
+
         private void FillFamiliesParameterValue(Document document, Definition selectedDefinition)
         {
             foreach (var f in Families)
@@ -137,10 +153,12 @@ namespace FamilyParameterEditor.EditFamiliesParameters.ViewModel
         {
             FillDefinitionFromGroup();
         }
+
         partial void OnSelectedCategoryChanged(Category value)
         {
             FillFamilies();
         }
+
         partial void OnDefinitionChanged(Definition value)
         {
             FillFamiliesParameterValue(Document, Definition);

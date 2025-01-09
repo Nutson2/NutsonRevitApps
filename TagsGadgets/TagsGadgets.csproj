@@ -6,7 +6,7 @@
     <TargetFrameworks>net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>C:\ProgramData\Autodesk\Revit\Addins\2020\NutsonAppExternalCommand</OutputPath>
+    <OutputPath>C:\ProgramData\Autodesk\Revit\Addins\2022\NutsonAppExternalCommand</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
@@ -24,8 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2020.2.60" />
-    <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2020.2.60" />
+	  <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2022.1.21" />
+	  <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2022.1.21" />
+	  <PackageReference Include="Nice3point.Revit.Extensions" Version="2022.3.0" />
+
   </ItemGroup>
 
   <ItemGroup>
